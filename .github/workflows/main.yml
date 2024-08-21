@@ -1,0 +1,24 @@
+name: Notify Repo Testing
+
+on:
+  push:
+    branches:
+      - main  # Adjust this to match the branch you want to trigger the workflow
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo 
+      uses: actions/checkout@v3
+
+    - name: Install GitHub CLI
+      run: sudo apt-get install gh
+
+    - name: Trigger Repo Testing Workflow
+      run: |
+        echo "${{ secrets.REPO_A2_PAT }}" | gh auth login --with-token
+        gh api repos/contact-deepak/Testing/dispatches \
+          -F event_type=trigger \
+          -H "Accept: application/vnd.github+json"
